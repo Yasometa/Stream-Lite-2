@@ -6,11 +6,11 @@ import matplotlib.pyplot as plt
 # Page setup
 st.set_page_config(page_title="Energy Prediction 🚀", page_icon="⚡", layout="centered")
 
-# Custom background image & styling
+# Custom background (energy theme)
 page_bg = """
 <style>
 [data-testid="stAppViewContainer"] {
-    background-image: url('https://images.unsplash.com/photo-1503387762-592deb58ef4e');
+    background-image: url('https://images.unsplash.com/photo-1581093588401-22d8f2a56e3e');
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
@@ -22,7 +22,7 @@ page_bg = """
     background-color: rgba(255,255,255,0.8);
 }
 div.stButton > button {
-    background-color: #2e8b57;
+    background-color: #0b6623;
     color: white;
     border-radius: 12px;
     height: 3em;
@@ -30,7 +30,7 @@ div.stButton > button {
     font-size: 16px;
 }
 div.stButton > button:hover {
-    background-color: #3cb371;
+    background-color: #32cd32;
     color: black;
 }
 </style>
@@ -41,8 +41,8 @@ st.markdown(page_bg, unsafe_allow_html=True)
 model = load("linear_regression_model.joblib")
 
 # App Title
-st.title("⚡ Energy Prediction App")
-st.write("Enter building characteristics to predict **energy consumption**:")
+st.title("⚡ Building Energy Prediction")
+st.write("Enter your building’s features to estimate **energy consumption (kWh/m²)**:")
 
 # Input fields
 X1 = st.number_input("Relative Compactness", min_value=0.62, max_value=0.98, value=0.75)
@@ -60,7 +60,7 @@ if st.button("Predict Energy Consumption ⚙️"):
     prediction = model.predict(features)
     predicted_value = float(prediction[0][0])
 
-    # Output card with style
+    # Styled result card
     st.markdown(f"""
     <div style="
         background-color: rgba(255,255,255,0.85);
@@ -69,30 +69,29 @@ if st.button("Predict Energy Consumption ⚙️"):
         text-align: center;
         box-shadow: 0px 4px 15px rgba(0,0,0,0.2);
         ">
-        <h2 style="color:#2e8b57;">Predicted Energy Consumption ⚡</h2>
+        <h2 style="color:#0b6623;">Predicted Energy Consumption ⚡</h2>
         <h1 style="color:#333;">{predicted_value:.2f} kWh/m²</h1>
     </div>
     """, unsafe_allow_html=True)
 
-    # Create pie chart
+    # Pie chart
     remaining = max(100 - predicted_value, 0)
     labels = ['Predicted Energy Use', 'Remaining Efficiency']
     values = [predicted_value, remaining]
-    colors = ['#2e8b57', '#d3d3d3']
+    colors = ['#0b6623', '#d3d3d3']
 
     fig, ax = plt.subplots()
     ax.pie(values, labels=labels, autopct='%1.1f%%', startangle=90, colors=colors)
     ax.axis('equal')
     st.pyplot(fig)
 
-    # Energy interpretation
+    # Energy efficiency interpretation
     if predicted_value < 20:
-        st.success("✅ Excellent energy efficiency!")
+        st.success("✅ Excellent energy efficiency! Your building design is very sustainable.")
     elif predicted_value < 35:
-        st.info("💡 Good efficiency, some improvement possible.")
+        st.info("💡 Good efficiency, but some optimization (insulation, orientation) could help.")
     else:
-        st.warning("⚠️ High energy usage detected — consider insulation or better materials.")
+        st.warning("⚠️ High energy usage detected — consider using better materials or passive design.")
 
 st.markdown("---")
 st.caption("🌍 Designed with ❤️ using Streamlit & Machine Learning")
-
