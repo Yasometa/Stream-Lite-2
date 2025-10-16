@@ -2,6 +2,8 @@ import streamlit as st
 from joblib import load
 import numpy as np
 import matplotlib.pyplot as plt
+from PIL import Image
+import base64
 
 # ========== PAGE CONFIG ==========
 st.set_page_config(page_title="Energy Prediction 🚀", page_icon="⚡", layout="wide")
@@ -10,11 +12,11 @@ st.set_page_config(page_title="Energy Prediction 🚀", page_icon="⚡", layout=
 def add_bg(image_file):
     with open(image_file, "rb") as f:
         data = f.read()
-    encoded = f"data:image/jpg;base64,{data.encode('base64') if hasattr(data, 'encode') else st.image(data)}"
+    encoded = base64.b64encode(data).decode()
     page_bg = f"""
     <style>
     [data-testid="stAppViewContainer"] {{
-        background: url("data:image/jpg;base64,{data.encode('base64') if hasattr(data, 'encode') else ''}");
+        background: url("data:image/jpg;base64,{encoded}");
         background-size: cover;
         background-position: center;
         background-attachment: fixed;
@@ -43,7 +45,7 @@ def add_bg(image_file):
     """
     st.markdown(page_bg, unsafe_allow_html=True)
 
-add_bg("sss.jpg")
+add_bg("sss.jpg")  # replace with your image file
 
 # ========== LOAD MODEL ==========
 model = load("linear_regression_model.joblib")
@@ -74,19 +76,23 @@ if st.button("🔮 Predict Energy Consumption"):
     features = np.array([[X1, X2, X3, X4, X5, X6, X7, X8]])
     prediction = model.predict(features)
 
+    # Ensure prediction is a single number
+    pred_value = prediction[0] if np.ndim(prediction) == 1 else prediction[0][0]
+
     st.markdown(f"""
     <div class='result-card'>
         <h2>Predicted Energy Consumption</h2>
-        <h1 style='font-size:45px;'>⚡ {prediction[0][0]:.2f} kWh</h1>
+        <h1 style='font-size:45px;'>⚡ {pred_value:.2f} kWh</h1>
         <p>Estimated energy use per unit area based on input parameters.</p>
     </div>
     """, unsafe_allow_html=True)
 
     # Pie chart visualization
+    remaining = max(100 - pred_value, 0)
     fig, ax = plt.subplots()
-    ax.pie([prediction[0][0], 100 - prediction[0][0] if prediction[0][0] <= 100 else 0],
+    ax.pie([pred_value, remaining],
            labels=['Predicted Energy', 'Remaining Capacity'],
-           autopct='%1.1f%%', startangle=90)
+           autopct='%1.1f%%', startangle=90, colors=['#0077FF', '#00FFCC'])
     ax.axis('equal')
     st.pyplot(fig)
 
