@@ -246,7 +246,7 @@ if predict_btn:
     with insight_col3:
         st.metric("Carbon Footprint", "2.1 tCO₂", "-0.5 tCO₂")
     
-    st.markdown("</div>", unsafe_allow_html=True")
+    st.markdown("</div>", unsafe_allow_html=True)
 
 # ========== FOOTER ==========
 st.markdown("""
@@ -255,4 +255,3 @@ st.markdown("""
     <p class='white-text' style='opacity: 0.7;'>UCI Energy Dataset • Professional Grade Analysis</p>
 </div>
 """, unsafe_allow_html=True)
-
