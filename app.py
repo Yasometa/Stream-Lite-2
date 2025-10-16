@@ -3,36 +3,45 @@ from joblib import load
 import numpy as np
 import matplotlib.pyplot as plt
 
-# Page setup
+# ----------------- PAGE CONFIG -----------------
 st.set_page_config(page_title="Smart Energy Prediction ⚡", page_icon="🏙️", layout="centered")
 
-# --- Background: modern smart city & energy buildings ---
+# --- Background: futuristic smart-energy theme ---
 page_bg = """
 <style>
 [data-testid="stAppViewContainer"] {
-    background-image: url('https://images.unsplash.com/photo-1581091870633-1eea1c90a6f0');
+    background-image: url('https://images.unsplash.com/photo-1603791440384-56cd371ee9a7?auto=format&fit=crop&w=1600&q=80');
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
+    backdrop-filter: blur(3px);
 }
 [data-testid="stHeader"] {
     background: rgba(0,0,0,0);
 }
 div.stButton > button {
-    background: linear-gradient(90deg, #007bff, #00c6ff);
+    background: linear-gradient(90deg, #00c6ff, #007bff);
     color: white;
-    border-radius: 12px;
+    border-radius: 10px;
     height: 3em;
     width: 100%;
     font-size: 16px;
     font-weight: bold;
-    box-shadow: 0px 4px 10px rgba(0,0,0,0.3);
+    box-shadow: 0px 4px 15px rgba(0,0,0,0.3);
 }
 div.stButton > button:hover {
-    background: linear-gradient(90deg, #00c6ff, #007bff);
+    background: linear-gradient(90deg, #007bff, #00c6ff);
     color: black;
 }
-.css-1cpxqw2, .stNumberInput input {
+.card {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 25px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+.stNumberInput input {
     background-color: rgba(255, 255, 255, 0.85);
     border-radius: 8px;
     padding: 8px;
@@ -43,15 +52,16 @@ div.stButton > button:hover {
 """
 st.markdown(page_bg, unsafe_allow_html=True)
 
-# Load model
+# ----------------- MODEL LOAD -----------------
 model = load("linear_regression_model.joblib")
 
-# Title and subtitle
-st.markdown("<h1 style='text-align:center;color:#00c6ff;'>🏙️ Smart Building Energy Predictor</h1>", unsafe_allow_html=True)
-st.markdown("<p style='text-align:center;color:white;'>Estimate your building's energy performance using AI-powered modeling ⚡</p>", unsafe_allow_html=True)
-
-# Input section with columns
+# ----------------- TITLE -----------------
+st.markdown("<h1 style='text-align:center;color:#00eaff;'>🏙️ Smart Energy Consumption Predictor</h1>", unsafe_allow_html=True)
+st.markdown("<p style='text-align:center;color:white;'>AI-powered analysis for sustainable building design ⚡</p>", unsafe_allow_html=True)
 st.markdown("<br>", unsafe_allow_html=True)
+
+# ----------------- INPUT FORM (Glass Card) -----------------
+st.markdown("<div class='card'>", unsafe_allow_html=True)
 st.subheader("🏗️ Enter Building Parameters")
 
 col1, col2 = st.columns(2)
@@ -65,35 +75,29 @@ with col2:
     X6 = st.number_input("Orientation", min_value=2, max_value=5, value=3)
     X7 = st.number_input("Glazing Area", min_value=0.0, max_value=0.4, value=0.2)
     X8 = st.number_input("Glazing Area Distribution", min_value=0, max_value=5, value=3)
+st.markdown("</div>", unsafe_allow_html=True)
 
-# Predict button
+# ----------------- PREDICTION -----------------
 st.markdown("<br>", unsafe_allow_html=True)
 if st.button("🔍 Predict Energy Consumption"):
     features = np.array([[X1, X2, X3, X4, X5, X6, X7, X8]])
     prediction = model.predict(features)
     predicted_value = float(prediction[0][0])
 
-    # --- Output card (blue electric glow) ---
+    # --- Output (Glass card with glow) ---
     st.markdown(f"""
-    <div style="
-        background: linear-gradient(145deg, rgba(0,40,80,0.9), rgba(0,80,160,0.85));
-        color: #00eaff;
-        padding: 25px;
-        border-radius: 15px;
-        text-align: center;
-        box-shadow: 0px 4px 25px rgba(0,0,0,0.5);
-        ">
+    <div class="card" style="text-align:center; color:#00eaff;">
         <h2>Predicted Energy Consumption ⚡</h2>
-        <h1 style="font-size:48px;">{predicted_value:.2f} kWh/m²</h1>
-        <p style="color:#b3e5ff;">AI estimation based on building structure parameters</p>
+        <h1 style="font-size:48px; color:#66d9ff;">{predicted_value:.2f} kWh/m²</h1>
+        <p style="color:#b3e5ff;">AI estimation based on structural design parameters</p>
     </div>
     """, unsafe_allow_html=True)
 
-    # --- Pie chart (energy blue) ---
+    # --- PIE CHART ---
     remaining = max(100 - predicted_value, 0)
     labels = ['Predicted Energy Use', 'Potential Efficiency']
     values = [predicted_value, remaining]
-    colors = ['#00c6ff', '#002f5e']
+    colors = ['#00c6ff', '#004477']
 
     fig, ax = plt.subplots()
     fig.patch.set_facecolor("none")
@@ -101,13 +105,15 @@ if st.button("🔍 Predict Energy Consumption"):
     ax.set_facecolor("none")
     st.pyplot(fig)
 
-    # --- Energy efficiency message ---
+    # --- Status message ---
     if predicted_value < 20:
         st.success("🌱 Excellent! Your building is highly energy-efficient.")
     elif predicted_value < 35:
-        st.info("💡 Good performance — optimization could improve efficiency further.")
+        st.info("💡 Good performance — minor optimization possible.")
     else:
-        st.warning("⚠️ High consumption — review insulation and glazing parameters.")
+        st.warning("⚠️ High energy use detected — review insulation and glazing design.")
 
 st.markdown("<hr>", unsafe_allow_html=True)
 st.caption("💠 Powered by Streamlit | Smart Energy Modeling System")
+
+
