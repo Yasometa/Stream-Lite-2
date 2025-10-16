@@ -49,25 +49,32 @@ add_bg("sss.jpeg")  # replace with your image file
 
 # ========== LOAD MODEL ==========
 model = load("linear_regression_model.joblib")
-
-# ========== HEADER ==========
-st.markdown("<h1 style='text-align:center;color:#00FFD1;'>🏙️ Energy Prediction System</h1>", unsafe_allow_html=True)
-st.markdown("<p style='text-align:center;color:white;'>Estimate building energy consumption based on environmental parameters.</p>", unsafe_allow_html=True)
-st.write("")
-
 # ========== INPUTS ==========
+st.markdown("<style>.glass {{background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); border-radius: 20px; padding: 25px; box-shadow: 0 4px 20px rgba(0,0,0,0.2);}}</style>", unsafe_allow_html=True)
+
 with st.container():
     st.markdown("<div class='glass'>", unsafe_allow_html=True)
-
     st.subheader("Enter Building Parameters:")
-    X1 = st.number_input("🏗️ Relative Compactness", min_value=0.62, max_value=0.98, value=0.75)
-    X2 = st.number_input("📐 Surface Area", min_value=514.0, max_value=808.0, value=600.0)
-    X3 = st.number_input("🏠 Wall Area", min_value=294.0, max_value=416.0, value=350.0)
-    X4 = st.number_input("🏢 Roof Area", min_value=110.0, max_value=220.0, value=150.0)
-    X5 = st.number_input("📏 Overall Height", min_value=3.0, max_value=7.0, value=3.5)
-    X6 = st.number_input("🧭 Orientation", min_value=2, max_value=5, value=3)
-    X7 = st.number_input("🌞 Glazing Area", min_value=0.0, max_value=0.4, value=0.2)
-    X8 = st.number_input("🪟 Glazing Area Distribution", min_value=0, max_value=5, value=3)
+
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        X1 = st.number_input("🏗️ Relative Compactness", min_value=0.62, max_value=0.98, value=0.75)
+        X2 = st.number_input("📐 Surface Area", min_value=514.0, max_value=808.0, value=600.0)
+        X3 = st.number_input("🏠 Wall Area", min_value=294.0, max_value=416.0, value=350.0)
+        X4 = st.number_input("🏢 Roof Area", min_value=110.0, max_value=220.0, value=150.0)
+
+    with col2:
+        X5 = st.number_input("📏 Overall Height", min_value=3.0, max_value=7.0, value=3.5)
+        X6 = st.number_input("🧭 Orientation", min_value=2, max_value=5, value=3)
+        X7 = st.number_input("🌞 Glazing Area", min_value=0.0, max_value=0.4, value=0.2)
+        X8 = st.number_input("🪟 Glazing Area Distribution", min_value=0, max_value=5, value=3)
+
+    st.markdown("</div>", unsafe_allow_html=True)
+
+
+# ========== HEADER ==========
+� Glazing Area Distribution", min_value=0, max_value=5, value=3)
 
     st.markdown("</div>", unsafe_allow_html=True)
 
@@ -97,6 +104,7 @@ if st.button("🔮 Predict Energy Consumption"):
     st.pyplot(fig)
 
 st.caption("🌍 Designed with ❤️ using Streamlit | Energy Efficiency Dataset (UCI)")
+
 
 
 
