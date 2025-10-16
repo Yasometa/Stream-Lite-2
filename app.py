@@ -16,7 +16,7 @@ def add_bg(image_file):
     page_bg = f"""
     <style>
     [data-testid="stAppViewContainer"] {{
-        background: url("data:image/jpg;base64,{encoded}");
+        background: url("data:image/jpeg;base64,{encoded}");
         background-size: cover;
         background-position: center;
         background-attachment: fixed;
@@ -45,7 +45,7 @@ def add_bg(image_file):
     """
     st.markdown(page_bg, unsafe_allow_html=True)
 
-add_bg("sss.jpg")  # replace with your image file
+add_bg("sss.jpeg")  # replace with your image file
 
 # ========== LOAD MODEL ==========
 model = load("linear_regression_model.joblib")
@@ -97,6 +97,7 @@ if st.button("🔮 Predict Energy Consumption"):
     st.pyplot(fig)
 
 st.caption("🌍 Designed with ❤️ using Streamlit | Energy Efficiency Dataset (UCI)")
+
 
 
 
