@@ -74,7 +74,7 @@ with st.container():
 
 
 # ========== HEADER ==========
-� Glazing Area Distribution", min_value=0, max_value=5, value=3)
+  Glazing Area Distribution", min_value=0, max_value=5, value=3)
 
     st.markdown("</div>", unsafe_allow_html=True)
 
@@ -104,6 +104,7 @@ if st.button("🔮 Predict Energy Consumption"):
     st.pyplot(fig)
 
 st.caption("🌍 Designed with ❤️ using Streamlit | Energy Efficiency Dataset (UCI)")
+
 
 
 
