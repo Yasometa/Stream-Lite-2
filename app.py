@@ -2,10 +2,17 @@ import streamlit as st
 from joblib import load
 import numpy as np
 import matplotlib.pyplot as plt
-import seaborn as sns
 import pandas as pd
 import base64
 import os
+
+# ========== CHECK AND INSTALL MISSING PACKAGES ==========
+try:
+    import seaborn as sns
+    SEABORN_AVAILABLE = True
+except ImportError:
+    SEABORN_AVAILABLE = False
+    st.warning("Seaborn not available. Heatmap will use matplotlib alternative.")
 
 # ========== PAGE CONFIG ==========
 st.set_page_config(page_title="Energy Prediction 🚀", page_icon="⚡", layout="wide")
@@ -196,38 +203,61 @@ if predict_btn:
             st.metric("Heating Load", f"{heat_load:.2f} kWh/m²", "40%")
     
     with col2:
-        st.markdown("<h3 class='cyan-text'>📈 Feature Impact Heatmap</h3>", unsafe_allow_html=True)
+        st.markdown("<h3 class='cyan-text'>📈 Feature Impact Analysis</h3>", unsafe_allow_html=True)
         
-        # Create feature impact data (example values)
+        # Create feature impact data
         features_names = ['Compactness', 'Surface Area', 'Wall Area', 'Roof Area', 
                          'Height', 'Orientation', 'Glazing Area', 'Glazing Dist.']
         
-        # Example impact scores (replace with your actual feature importance)
+        # Example impact scores
         impact_scores = [X1 * 0.3, X2 * 0.1, X3 * 0.15, X4 * 0.1, 
                         X5 * 0.2, X6 * 0.05, X7 * 0.25, X8 * 0.05]
         
-        # Create heatmap data
-        heatmap_data = pd.DataFrame({
-            'Feature': features_names,
-            'Impact': impact_scores
-        }).set_index('Feature')
-        
-        # Create heatmap
-        fig2, ax2 = plt.subplots(figsize=(10, 6))
-        sns.heatmap(heatmap_data.T, annot=True, fmt='.2f', cmap='coolwarm', 
-                   cbar_kws={'label': 'Impact Score'}, ax=ax2,
-                   annot_kws={'color': 'white', 'weight': 'bold'})
-        
-        ax2.set_facecolor('none')
-        fig2.patch.set_facecolor('none')
-        ax2.tick_params(colors='white')
-        plt.title('Feature Impact on Energy Consumption', 
-                 color='white', fontsize=14, fontweight='bold', pad=20)
-        plt.xticks(rotation=45, color='white')
-        plt.yticks(color='white')
-        cbar = ax2.collections[0].colorbar
-        cbar.ax.yaxis.set_tick_params(color='white')
-        plt.setp(plt.getp(cbar.ax, 'yticklabels'), color='white')
+        if SEABORN_AVAILABLE:
+            # Create heatmap with seaborn
+            heatmap_data = pd.DataFrame({
+                'Feature': features_names,
+                'Impact': impact_scores
+            }).set_index('Feature')
+            
+            fig2, ax2 = plt.subplots(figsize=(10, 6))
+            sns.heatmap(heatmap_data.T, annot=True, fmt='.2f', cmap='coolwarm', 
+                       cbar_kws={'label': 'Impact Score'}, ax=ax2,
+                       annot_kws={'color': 'white', 'weight': 'bold'})
+            
+            ax2.set_facecolor('none')
+            fig2.patch.set_facecolor('none')
+            ax2.tick_params(colors='white')
+            plt.title('Feature Impact Heatmap', 
+                     color='white', fontsize=14, fontweight='bold', pad=20)
+            plt.xticks(rotation=45, color='white')
+            plt.yticks(color='white')
+            cbar = ax2.collections[0].colorbar
+            cbar.ax.yaxis.set_tick_params(color='white')
+            plt.setp(plt.getp(cbar.ax, 'yticklabels'), color='white')
+        else:
+            # Fallback: Bar chart with matplotlib
+            fig2, ax2 = plt.subplots(figsize=(10, 6))
+            y_pos = np.arange(len(features_names))
+            colors = plt.cm.coolwarm(np.linspace(0, 1, len(impact_scores)))
+            
+            bars = ax2.barh(y_pos, impact_scores, color=colors, alpha=0.8)
+            ax2.set_yticks(y_pos)
+            ax2.set_yticklabels(features_names, color='white', fontweight='bold')
+            ax2.set_xlabel('Impact Score', color='white', fontweight='bold')
+            ax2.set_title('Feature Impact Analysis', color='white', fontsize=14, fontweight='bold', pad=20)
+            
+            # Add value labels on bars
+            for i, v in enumerate(impact_scores):
+                ax2.text(v + 0.01, i, f'{v:.2f}', color='white', fontweight='bold', va='center')
+            
+            ax2.set_facecolor('none')
+            fig2.patch.set_facecolor('none')
+            ax2.tick_params(colors='white')
+            ax2.spines['bottom'].set_color('white')
+            ax2.spines['top'].set_color('white') 
+            ax2.spines['right'].set_color('white')
+            ax2.spines['left'].set_color('white')
         
         st.pyplot(fig2)
     
@@ -255,3 +285,4 @@ st.markdown("""
     <p class='white-text' style='opacity: 0.7;'>UCI Energy Dataset • Professional Grade Analysis</p>
 </div>
 """, unsafe_allow_html=True)
+
