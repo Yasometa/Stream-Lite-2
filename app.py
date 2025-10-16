@@ -37,6 +37,14 @@ st.markdown("""
         padding: 10px !important;
     }
     
+    /* Input label styling - FIXED VISIBILITY */
+    .stNumberInput label {
+        color: #1E90FF !important;
+        font-weight: 600 !important;
+        font-size: 16px !important;
+        text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7) !important;
+    }
+    
     /* Text styling for dark theme */
     .dark-heading {
         color: #1E90FF !important;
@@ -103,6 +111,11 @@ st.markdown("""
     .stButton button:hover {
         background: linear-gradient(135deg, #1C86EE, #009ACD);
         box-shadow: 0 6px 20px rgba(30, 144, 255, 0.6);
+    }
+    
+    /* Help text styling */
+    .stNumberInput .stTooltipIcon {
+        color: #00CED1 !important;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -373,5 +386,6 @@ st.markdown("""
     <p class='white-text' style='opacity: 0.7;'>UCI Energy Dataset • Professional Grade Analysis</p>
 </div>
 """, unsafe_allow_html=True)
+
 
 
