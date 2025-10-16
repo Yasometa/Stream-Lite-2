@@ -17,83 +17,144 @@ except ImportError:
 # ========== PAGE CONFIG ==========
 st.set_page_config(page_title="Energy Prediction 🚀", page_icon="⚡", layout="wide")
 
-# ========== CUSTOM CSS FOR BETTER VISIBILITY ==========
+# ========== CUSTOM CSS FOR DARK THEME ==========
 st.markdown("""
 <style>
     /* Main content styling */
     .main-content {
-        background: rgba(0, 0, 0, 0.7);
+        background: rgba(13, 17, 23, 0.85);
         backdrop-filter: blur(15px);
         border-radius: 20px;
         padding: 25px;
         margin: 20px 0;
-        border: 1px solid rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.1);
     }
     
     /* Input field styling */
-    .stNumberInput, .stSlider {
-        background: rgba(255, 255, 255, 0.9) !important;
+    .stNumberInput {
+        background: rgba(255, 255, 255, 0.95) !important;
         border-radius: 10px !important;
         padding: 10px !important;
     }
     
-    /* Text styling for better contrast */
-    .white-text {
-        color: white !important;
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+    /* Text styling for dark theme */
+    .dark-heading {
+        color: #1E90FF !important;
+        text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
+        font-weight: 700;
     }
     
-    .cyan-text {
-        color: #00FFFF !important;
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+    .dark-subheading {
+        color: #00CED1 !important;
+        text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.6);
+        font-weight: 600;
+    }
+    
+    .white-text {
+        color: #E8E8E8 !important;
+        text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
     }
     
     /* Card styling */
     .result-card {
-        background: linear-gradient(135deg, rgba(0, 119, 255, 0.9), rgba(0, 255, 204, 0.9));
+        background: linear-gradient(135deg, rgba(30, 30, 60, 0.95), rgba(0, 50, 80, 0.9));
         color: white;
         border-radius: 15px;
         text-align: center;
         padding: 25px;
         margin: 20px 0;
         font-size: 20px;
-        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
-        border: 2px solid rgba(255, 255, 255, 0.3);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+        border: 2px solid rgba(0, 150, 255, 0.3);
+    }
+    
+    /* Input card styling */
+    .input-card {
+        background: rgba(30, 35, 45, 0.9);
+        border-radius: 15px;
+        padding: 20px;
+        margin: 10px 0;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        border: 1px solid rgba(100, 150, 255, 0.2);
     }
     
     /* Metric cards */
     .metric-card {
-        background: rgba(255, 255, 255, 0.95);
+        background: rgba(25, 30, 40, 0.9);
         border-radius: 15px;
         padding: 15px;
         text-align: center;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(100, 150, 255, 0.2);
+        color: #E8E8E8;
+    }
+    
+    /* Button styling */
+    .stButton button {
+        background: linear-gradient(135deg, #1E90FF, #00BFFF);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        padding: 12px 24px;
+        font-weight: 600;
+        box-shadow: 0 4px 15px rgba(30, 144, 255, 0.4);
+    }
+    
+    .stButton button:hover {
+        background: linear-gradient(135deg, #1C86EE, #009ACD);
+        box-shadow: 0 6px 20px rgba(30, 144, 255, 0.6);
     }
 </style>
 """, unsafe_allow_html=True)
 
 # ========== BACKGROUND IMAGE ==========
-def add_bg(image_file):
+def add_bg_from_local(image_file):
     if os.path.exists(image_file):
         with open(image_file, "rb") as f:
             data = f.read()
         encoded = base64.b64encode(data).decode()
+        
         page_bg = f"""
         <style>
         [data-testid="stAppViewContainer"] {{
-            background: url("data:image/jpeg;base64,{encoded}");
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 30, 0.8)), 
+                         url("data:image/jpeg;base64,{encoded}");
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
+        }}
+        
+        [data-testid="stHeader"] {{
+            background: rgba(0, 0, 0, 0.0);
+        }}
+        
+        [data-testid="stSidebar"] {{
+            background: rgba(13, 17, 23, 0.9) !important;
         }}
         </style>
         """
         st.markdown(page_bg, unsafe_allow_html=True)
     else:
-        st.warning(f"Background image '{image_file}' not found. Using default background.")
+        # Fallback gradient background
+        st.markdown("""
+        <style>
+        [data-testid="stAppViewContainer"] {
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+        }
+        
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        </style>
+        """, unsafe_allow_html=True)
+        st.info("Using default gradient background. Add your image file for custom background.")
 
-# Add background
-add_bg("sss.jpeg")
+# Add background - replace with your image file
+add_bg_from_local("energy_bg.jpg")  # You can use: dark_tech.jpg, energy_dashboard.jpg, etc.
 
 # ========== LOAD MODEL ==========
 try:
@@ -107,29 +168,53 @@ except:
     model = DummyModel()
 
 # ========== HEADER ==========
-st.markdown("<h1 class='cyan-text' style='text-align:center;'>🏙️ Smart Energy Prediction System</h1>", unsafe_allow_html=True)
+st.markdown("<h1 class='dark-heading' style='text-align:center;'>🏙️ Smart Energy Prediction System</h1>", unsafe_allow_html=True)
 st.markdown("<p class='white-text' style='text-align:center; font-size:18px;'>Advanced AI-powered building energy consumption analysis</p>", unsafe_allow_html=True)
 
 # ========== INPUTS SECTION ==========
 st.markdown("<div class='main-content'>", unsafe_allow_html=True)
-st.markdown("<h2 class='cyan-text'>🏗️ Building Parameters</h2>", unsafe_allow_html=True)
+st.markdown("<h2 class='dark-subheading'>🏗️ Building Parameters</h2>", unsafe_allow_html=True)
 
 col1, col2 = st.columns(2)
 
 with col1:
-    st.markdown("<div class='metric-card'>", unsafe_allow_html=True)
-    X1 = st.slider("**Relative Compactness**", 0.62, 0.98, 0.75, 0.01)
-    X2 = st.slider("**Surface Area (m²)**", 514.0, 808.0, 600.0, 10.0)
-    X3 = st.slider("**Wall Area (m²)**", 294.0, 416.0, 350.0, 5.0)
-    X4 = st.slider("**Roof Area (m²)**", 110.0, 220.0, 150.0, 5.0)
+    st.markdown("<div class='input-card'>", unsafe_allow_html=True)
+    X1 = st.number_input(
+        "🏗️ Relative Compactness", min_value=0.62, max_value=0.98, value=0.75, step=0.01,
+        help="Ratio of building volume to surface area"
+    )
+    X2 = st.number_input(
+        "📐 Surface Area (m²)", min_value=514.0, max_value=808.0, value=600.0, step=10.0,
+        help="Total surface area of the building"
+    )
+    X3 = st.number_input(
+        "🏠 Wall Area (m²)", min_value=294.0, max_value=416.0, value=350.0, step=5.0,
+        help="Total wall area exposed to external environment"
+    )
+    X4 = st.number_input(
+        "🏢 Roof Area (m²)", min_value=110.0, max_value=220.0, value=150.0, step=5.0,
+        help="Total roof area of the building"
+    )
     st.markdown("</div>", unsafe_allow_html=True)
 
 with col2:
-    st.markdown("<div class='metric-card'>", unsafe_allow_html=True)
-    X5 = st.slider("**Overall Height (m)**", 3.0, 7.0, 3.5, 0.1)
-    X6 = st.slider("**Orientation**", 2, 5, 3, 1)
-    X7 = st.slider("**Glazing Area Ratio**", 0.0, 0.4, 0.2, 0.05)
-    X8 = st.slider("**Glazing Distribution**", 0, 5, 3, 1)
+    st.markdown("<div class='input-card'>", unsafe_allow_html=True)
+    X5 = st.number_input(
+        "📏 Overall Height (m)", min_value=3.0, max_value=7.0, value=3.5, step=0.1,
+        help="Total height of the building"
+    )
+    X6 = st.number_input(
+        "🧭 Orientation", min_value=2, max_value=5, value=3, step=1,
+        help="Building orientation (2: North, 3: East, 4: South, 5: West)"
+    )
+    X7 = st.number_input(
+        "🌞 Glazing Area Ratio", min_value=0.0, max_value=0.4, value=0.2, step=0.05,
+        help="Ratio of glazing area to floor area"
+    )
+    X8 = st.number_input(
+        "🪟 Glazing Area Distribution", min_value=0, max_value=5, value=3, step=1,
+        help="Distribution of glazing area across building faces"
+    )
     st.markdown("</div>", unsafe_allow_html=True)
 
 st.markdown("</div>", unsafe_allow_html=True)
@@ -147,7 +232,7 @@ if predict_btn:
     prediction = model.predict(features)
     pred_value = prediction[0] if np.ndim(prediction) == 1 else prediction[0][0]
     
-    # Calculate cool/heat load distribution (example logic)
+    # Calculate cool/heat load distribution
     cool_load = pred_value * 0.6  # 60% for cooling
     heat_load = pred_value * 0.4  # 40% for heating
     
@@ -156,9 +241,9 @@ if predict_btn:
     # Result Card
     st.markdown(f"""
     <div class='result-card'>
-        <h2 style='margin-bottom: 20px;'>📊 Energy Consumption Analysis</h2>
-        <h1 style='font-size:48px; margin: 10px 0;'>⚡ {pred_value:.2f} kWh/m²</h1>
-        <p style='font-size:16px; opacity: 0.9;'>Total Energy Load per Square Meter</p>
+        <h2 style='margin-bottom: 20px; color: #00CED1;'>📊 Energy Consumption Analysis</h2>
+        <h1 style='font-size:48px; margin: 10px 0; color: #1E90FF;'>⚡ {pred_value:.2f} kWh/m²</h1>
+        <p style='font-size:16px; opacity: 0.9; color: #E8E8E8;'>Total Energy Load per Square Meter</p>
     </div>
     """, unsafe_allow_html=True)
     
@@ -166,20 +251,22 @@ if predict_btn:
     col1, col2 = st.columns(2)
     
     with col1:
-        st.markdown("<h3 class='cyan-text'>🔥❄️ Cool/Heat Load Distribution</h3>", unsafe_allow_html=True)
+        st.markdown("<h3 class='dark-subheading'>🔥❄️ Cool/Heat Load Distribution</h3>", unsafe_allow_html=True)
         
-        # Professional pie chart
+        # Professional pie chart with dark theme
         fig1, ax1 = plt.subplots(figsize=(8, 6))
+        fig1.patch.set_facecolor('#0D1117')
+        ax1.set_facecolor('#0D1117')
+        
         labels = ['Cooling Load', 'Heating Load']
         sizes = [cool_load, heat_load]
-        colors = ['#00B4D8', '#FF6B6B']
-        explode = (0.05, 0.05)  # explode slices
+        colors = ['#1E90FF', '#FF6B6B']  # Blue for cooling, Red for heating
+        explode = (0.05, 0.05)
         
         wedges, texts, autotexts = ax1.pie(sizes, explode=explode, labels=labels, colors=colors,
                                           autopct='%1.1f%%', shadow=True, startangle=90,
                                           textprops={'fontsize': 12, 'color': 'white', 'weight': 'bold'})
         
-        # Enhance pie chart appearance
         for autotext in autotexts:
             autotext.set_color('white')
             autotext.set_fontweight('bold')
@@ -189,44 +276,42 @@ if predict_btn:
                  color='white', fontsize=14, fontweight='bold', pad=20)
         plt.setp(texts, color='white', fontweight='bold')
         
-        # Set background color
-        fig1.patch.set_facecolor('none')
-        ax1.set_facecolor('none')
-        
         st.pyplot(fig1)
         
         # Load metrics
         col1_1, col1_2 = st.columns(2)
         with col1_1:
-            st.metric("Cooling Load", f"{cool_load:.2f} kWh/m²", "60%")
+            st.metric("Cooling Load", f"{cool_load:.2f} kWh/m²", "60%",
+                     help="Energy required for cooling systems")
         with col1_2:
-            st.metric("Heating Load", f"{heat_load:.2f} kWh/m²", "40%")
+            st.metric("Heating Load", f"{heat_load:.2f} kWh/m²", "40%",
+                     help="Energy required for heating systems")
     
     with col2:
-        st.markdown("<h3 class='cyan-text'>📈 Feature Impact Analysis</h3>", unsafe_allow_html=True)
+        st.markdown("<h3 class='dark-subheading'>📈 Feature Impact Analysis</h3>", unsafe_allow_html=True)
         
         # Create feature impact data
         features_names = ['Compactness', 'Surface Area', 'Wall Area', 'Roof Area', 
                          'Height', 'Orientation', 'Glazing Area', 'Glazing Dist.']
         
-        # Example impact scores
         impact_scores = [X1 * 0.3, X2 * 0.1, X3 * 0.15, X4 * 0.1, 
                         X5 * 0.2, X6 * 0.05, X7 * 0.25, X8 * 0.05]
         
         if SEABORN_AVAILABLE:
-            # Create heatmap with seaborn
+            # Create heatmap with dark theme
             heatmap_data = pd.DataFrame({
                 'Feature': features_names,
                 'Impact': impact_scores
             }).set_index('Feature')
             
             fig2, ax2 = plt.subplots(figsize=(10, 6))
-            sns.heatmap(heatmap_data.T, annot=True, fmt='.2f', cmap='coolwarm', 
+            fig2.patch.set_facecolor('#0D1117')
+            ax2.set_facecolor('#0D1117')
+            
+            sns.heatmap(heatmap_data.T, annot=True, fmt='.2f', cmap='viridis', 
                        cbar_kws={'label': 'Impact Score'}, ax=ax2,
                        annot_kws={'color': 'white', 'weight': 'bold'})
             
-            ax2.set_facecolor('none')
-            fig2.patch.set_facecolor('none')
             ax2.tick_params(colors='white')
             plt.title('Feature Impact Heatmap', 
                      color='white', fontsize=14, fontweight='bold', pad=20)
@@ -236,10 +321,13 @@ if predict_btn:
             cbar.ax.yaxis.set_tick_params(color='white')
             plt.setp(plt.getp(cbar.ax, 'yticklabels'), color='white')
         else:
-            # Fallback: Bar chart with matplotlib
+            # Fallback: Bar chart with dark theme
             fig2, ax2 = plt.subplots(figsize=(10, 6))
+            fig2.patch.set_facecolor('#0D1117')
+            ax2.set_facecolor('#0D1117')
+            
             y_pos = np.arange(len(features_names))
-            colors = plt.cm.coolwarm(np.linspace(0, 1, len(impact_scores)))
+            colors = plt.cm.viridis(np.linspace(0, 1, len(impact_scores)))
             
             bars = ax2.barh(y_pos, impact_scores, color=colors, alpha=0.8)
             ax2.set_yticks(y_pos)
@@ -247,12 +335,9 @@ if predict_btn:
             ax2.set_xlabel('Impact Score', color='white', fontweight='bold')
             ax2.set_title('Feature Impact Analysis', color='white', fontsize=14, fontweight='bold', pad=20)
             
-            # Add value labels on bars
             for i, v in enumerate(impact_scores):
                 ax2.text(v + 0.01, i, f'{v:.2f}', color='white', fontweight='bold', va='center')
             
-            ax2.set_facecolor('none')
-            fig2.patch.set_facecolor('none')
             ax2.tick_params(colors='white')
             ax2.spines['bottom'].set_color('white')
             ax2.spines['top'].set_color('white') 
@@ -263,18 +348,21 @@ if predict_btn:
     
     # Additional Insights
     st.markdown("---")
-    st.markdown("<h3 class='cyan-text'>💡 Energy Efficiency Insights</h3>", unsafe_allow_html=True)
+    st.markdown("<h3 class='dark-subheading'>💡 Energy Efficiency Insights</h3>", unsafe_allow_html=True)
     
     insight_col1, insight_col2, insight_col3 = st.columns(3)
     
     with insight_col1:
-        st.metric("Efficiency Rating", "B+", "+2 levels")
+        st.metric("Efficiency Rating", "B+", "+2 levels",
+                 help="Building energy efficiency classification")
     
     with insight_col2:
-        st.metric("Potential Savings", "15%", "-8% vs avg.")
+        st.metric("Potential Savings", "15%", "-8% vs avg.",
+                 help="Potential energy savings compared to average buildings")
     
     with insight_col3:
-        st.metric("Carbon Footprint", "2.1 tCO₂", "-0.5 tCO₂")
+        st.metric("Carbon Footprint", "2.1 tCO₂", "-0.5 tCO₂",
+                 help="Estimated carbon dioxide emissions reduction")
     
     st.markdown("</div>", unsafe_allow_html=True)
 
@@ -285,4 +373,5 @@ st.markdown("""
     <p class='white-text' style='opacity: 0.7;'>UCI Energy Dataset • Professional Grade Analysis</p>
 </div>
 """, unsafe_allow_html=True)
+
 
