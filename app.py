@@ -170,15 +170,7 @@ def add_bg_from_local(image_file):
 add_bg_from_local("energy_bg.jpg")  # You can use: dark_tech.jpg, energy_dashboard.jpg, etc.
 
 # ========== LOAD MODEL ==========
-try:
     model = load("linear_regression_model.joblib")
-except:
-    st.error("Model file 'linear_regression_model.joblib' not found. Using dummy model.")
-    # Dummy model for demonstration
-    class DummyModel:
-        def predict(self, X):
-            return np.array([25.5 + 0.1 * X[0][0] + 0.05 * X[0][1]])
-    model = DummyModel()
 
 # ========== HEADER ==========
 st.markdown("<h1 class='dark-heading' style='text-align:center;'>🏙️ Smart Energy Prediction System</h1>", unsafe_allow_html=True)
@@ -386,6 +378,7 @@ st.markdown("""
     <p class='white-text' style='opacity: 0.7;'>UCI Energy Dataset • Professional Grade Analysis</p>
 </div>
 """, unsafe_allow_html=True)
+
 
 
 
